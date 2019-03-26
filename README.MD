@@ -6,4 +6,22 @@
 # BOOK
 
 ## 安装手册
-### 继续。。。。
+### 01-VirtualBox安装CentOS7
+### 02-Linux安装jdk1.8
+### 03-Linux安装Redis
+### 04-Linux安装多Tomcat
+### 05-Linux安装Nginx
+### 06-Linux安装solr
+### 07-Linux安装mysql-5.7
+### 08-Linux安装Kafka集群
+### 09-Linux安装FastDFS
+### 10-Linux安装GitLab搭建私服
+### 11-Linux安装Neuxs私服
+### 12-Linux安装RibbitMq
+### 13-Idea 实用插件
+### 14-Linux安装ELK
+## 技术文章
+### Spring @Transactional 注解详解
+### Mybatis Generator配置详解
+### JVM性能调优
+### 证书公私钥生成
