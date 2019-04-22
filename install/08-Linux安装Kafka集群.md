@@ -62,7 +62,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_2.properties
+vi server_2.properties
 ```
 
 ```shell
@@ -128,7 +128,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_2.properties
+vi server_2.properties
 ```
 
 ```shell
@@ -194,7 +194,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_3.properties
+vi server_3.properties
 ```
 
 ```shell
