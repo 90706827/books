@@ -82,7 +82,7 @@ log.retention.hours=24
 log.roll.hours=1
 log.segment.bytes=1073741284
 log.retention.check.interval.ms=3600000
-zookeeper.connect=192.168.0.121:2181,192.168.0.122:2182,192.168.0.123:2183
+zookeeper.connect=192.168.0.121:2181,192.168.0.122:2181,192.168.0.123:2181
 zookeeper.connection.timeout.ms=60000
 ```
 
@@ -116,7 +116,7 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 dataDir=/opt/kafka/zookeeper_2
-clientPort=2182
+clientPort=2181
 maxClientCnxns=0
 server.1=192.168.0.121:2888:3888
 server.2=192.168.0.122:2888:3888
@@ -148,7 +148,7 @@ log.retention.hours=24
 log.roll.hours=1
 log.segment.bytes=1073741284
 log.retention.check.interval.ms=3600000
-zookeeper.connect=192.168.0.121:2181,192.168.0.122:2182,192.168.0.123:2183
+zookeeper.connect=192.168.0.121:2181,192.168.0.122:2181,192.168.0.123:2181
 zookeeper.connection.timeout.ms=60000
 ```
 
@@ -182,7 +182,7 @@ tickTime=2000
 initLimit=10
 syncLimit=5
 dataDir=/opt/kafka/zookeeper_3
-clientPort=2183
+clientPort=2181
 maxClientCnxns=0
 server.1=192.168.0.121:2888:3888
 server.2=192.168.0.122:2888:3888
@@ -214,7 +214,7 @@ log.retention.hours=24
 log.roll.hours=1
 log.segment.bytes=1073741284
 log.retention.check.interval.ms=3600000
-zookeeper.connect=192.168.0.121:2181,192.168.0.122:2182,192.168.0.123:2183
+zookeeper.connect=192.168.0.121:2181,192.168.0.122:2181,192.168.0.123:2181
 zookeeper.connection.timeout.ms=60000
 ```
 
