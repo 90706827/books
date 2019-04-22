@@ -62,7 +62,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi server_2.properties
+vi server_1.properties
 ```
 
 ```shell
