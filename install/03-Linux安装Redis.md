@@ -1,26 +1,26 @@
-#CentOS 7 安装Redis
+# CentOS 7 安装Redis
 
 互联网的开放性成就了程序员的未来，I Love Internet！
 
-##安装运行环境
+## 安装运行环境
 
 ```
 yum install gcc*
 ```
-##下载Redis并解压
+## 下载Redis并解压
 
 ```
 wget http://download.redis.io/redis-stable.tar.gz
 tar -zxvf redis-stable.tar.gz
 ```
-##编译 安装
+## 编译 安装
 
 ```
 cd redis-stable
 make 
 make install
 ```
-##修改配置文件
+## 修改配置文件
 
 ```
 mkdir /var/redis
@@ -56,14 +56,14 @@ dir：		数据快照的保存目录（这个是目录）
 appendonly：是否开启appendonlylog，开启的话每次写操作会记一条log，这会提高数据抗风险能力，但影响效率。
 appendfsync：appendonlylog	如何同步到磁盘（三个选项，分别是每次写都强制调用fsync、每秒启用一次fsync、不调用fsync等待系统自己同步）
 ```
-##启动Redis
+## 启动Redis
 
 ```
 redis-server /etc/redis/redis.conf
 ps -ef | grep redis --查看启动
 kill -9 进程号  --关闭服务
 ```
-##创建启动脚本
+## 创建启动脚本
 
 ```
 --拷贝安装目录redis-stable文件redis_init_script到/etc/init.d目录下
@@ -87,7 +87,7 @@ Ctrl+c 保存退出：wq
 chmod +x /etc/init.d/redis
 chkconfig redis on
 ```
-##启动 关闭命令
+## 启动 关闭命令
 
 ```
 service redis start
@@ -95,6 +95,6 @@ service redis stop
 
 reboot --重启服务器命令 查看重启服务器后redis是启动成功！
 ```
-##安装过程中如有疑问评论留言！
+## 安装过程中如有疑问评论留言！
 
 个人邮箱： 90706827@163.com

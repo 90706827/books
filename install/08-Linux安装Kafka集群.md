@@ -31,10 +31,9 @@ tar -zxvf kafka_2.11-2.0.0.tgz
 mv kafka_2.11-2.0.0 kafka
 #创建目录
 cd kafka
-mkdir zookeeper_1
+mkdir zookeeper kafka_logs
 #编辑myid文件 写入节点数：1
 vi zookeeper_1/myid 
-mkdir kafka_logs_1
 ```
 
 ##### 配置zookeeper.properties
@@ -42,14 +41,14 @@ mkdir kafka_logs_1
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_1.properties
+vi zookeeper.properties
 ```
 
 ```shell
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/opt/kafka/zookeeper_1
+dataDir=/opt/kafka/zookeeper
 clientPort=2181
 maxClientCnxns=0
 server.1=192.168.0.121:2888:3888
@@ -62,7 +61,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi server_1.properties
+vi server.properties
 ```
 
 ```shell
@@ -74,7 +73,7 @@ num.network.threads=3
 num.io.threads=8
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
-log.dirs=/opt/kafka/kafka_logs_1
+log.dirs=/opt/kafka/kafka_logs
 num.partitions=6
 default.replication.factor=4
 num.recovery.threads.per.data.dir=1
@@ -97,10 +96,9 @@ tar -zxvf kafka_2.11-2.0.0.tgz
 mv kafka_2.11-2.0.0 kafka
 #创建目录
 cd kafka
-mkdir zookeeper_2
+mkdir zookeeper  kafka_logs
 #编辑myid文件 写入节点数：2
 vi zookeeper_2/myid 
-mkdir kafka_logs_2
 ```
 
 ##### 配置zookeeper.properties
@@ -108,14 +106,14 @@ mkdir kafka_logs_2
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_2.properties
+vi zookeeper.properties
 ```
 
 ```shell
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/opt/kafka/zookeeper_2
+dataDir=/opt/kafka/zookeeper
 clientPort=2181
 maxClientCnxns=0
 server.1=192.168.0.121:2888:3888
@@ -128,7 +126,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi server_2.properties
+vi server.properties
 ```
 
 ```shell
@@ -140,7 +138,7 @@ num.network.threads=3
 num.io.threads=8
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
-log.dirs=/opt/kafka/kafka_logs_2
+log.dirs=/opt/kafka/kafka_logs
 num.partitions=6
 default.replication.factor=4
 num.recovery.threads.per.data.dir=1
@@ -163,10 +161,9 @@ tar -zxvf kafka_2.11-2.0.0.tgz
 mv kafka_2.11-2.0.0 kafka
 #创建目录
 cd kafka
-mkdir zookeeper_3
+mkdir zookeeper kafka_logs
 #编辑myid文件 写入节点数：3
-vi zookeeper_3/myid 
-mkdir kafka_logs_3
+vi zookeeper/myid 
 ```
 
 ##### 配置zookeeper.properties
@@ -174,19 +171,19 @@ mkdir kafka_logs_3
 ```shell
 #准备配置文件
 cd kafka/config
-vi zookeeper_3.properties
+vi zookeeper.properties
 ```
 
 ```shell
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/opt/kafka/zookeeper_3
+dataDir=/opt/kafka/zookeeper
 clientPort=2181
 maxClientCnxns=0
-server.1=192.168.0.121:2888:3888
-server.2=192.168.0.122:2888:3888
-server.3=192.168.0.123:2888:3888
+server.1=192.168.0.121:2882:3883
+server.2=192.168.0.122:2882:3883
+server.3=192.168.0.123:2882:3883
 ```
 
 ##### 配置server.properties
@@ -194,7 +191,7 @@ server.3=192.168.0.123:2888:3888
 ```shell
 #准备配置文件
 cd kafka/config
-vi server_3.properties
+vi server.properties
 ```
 
 ```shell
@@ -206,7 +203,7 @@ num.network.threads=3
 num.io.threads=8
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
-log.dirs=/opt/kafka/kafka_logs_3
+log.dirs=/opt/kafka/kafka_logs
 num.partitions=6
 default.replication.factor=4
 num.recovery.threads.per.data.dir=1
@@ -220,14 +217,15 @@ zookeeper.connection.timeout.ms=60000
 
 
 
-## 关闭防火墙
+## 开启端口
 
 生产环境要根据实际情况开放端口
 
 ```shell
-systemctl stop firewalld.service
-systemctl disable firewalld.service
-systemctl status firewalld.service
+firewall-cmd --zone=public --add-port=3883/tcp --permanent
+firewall-cmd --zone=public --add-port=2882/tcp --permanent
+firewall-cmd --reload
+firewall-cmd --zone=public --list-ports
 ```
 
 ## 启动集群
@@ -236,8 +234,8 @@ systemctl status firewalld.service
 
 ```shell
 cd kafka
-sh bin/zookeeper-server-start.sh config/zookeeper_1.properties &
-sh bin/kafka-server-start.sh config/server_1.properties &
+sh bin/zookeeper-server-start.sh config/zookeeper.properties &
+sh bin/kafka-server-start.sh config/server.properties &
 #查看是否启动
 ps -ef|grep java
 #jps 查看启动情况
@@ -248,8 +246,8 @@ jps
 
 ```shell
 cd kafka
-sh bin/zookeeper-server-start.sh config/zookeeper_2.properties &
-sh bin/kafka-server-start.sh config/server_2.properties &
+sh bin/zookeeper-server-start.sh config/zookeeper.properties &
+sh bin/kafka-server-start.sh config/server.properties &
 #查看是否启动
 ps -ef|grep java
 #jps 查看启动情况
@@ -260,8 +258,8 @@ jps
 
 ```shell
 cd kafka
-sh bin/zookeeper-server-start.sh config/zookeeper_3.properties &
-sh bin/kafka-server-start.sh config/server_3.properties &
+sh bin/zookeeper-server-start.sh config/zookeeper.properties &
+sh bin/kafka-server-start.sh config/server.properties &
 #查看是否启动
 ps -ef|grep java
 #jps 查看启动情况

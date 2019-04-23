@@ -1,4 +1,4 @@
-﻿##CentOS 7 多Tomcat安装
+﻿## CentOS 7 多Tomcat安装
 [Tomcat官网](http://tomcat.apache.org)
 
 下载tomcat并拷贝tomcat到制定路径 拷贝两份

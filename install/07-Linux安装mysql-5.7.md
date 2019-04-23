@@ -1,9 +1,9 @@
-﻿##CentOS7 安装mysql 5.7
-##[MySql官网地址](https://www.mysql.com/)
+﻿## CentOS7 安装mysql 5.7
+[MySql官网地址](https://www.mysql.com/)
 
 ![](img\20171204202649723.png)
 
-![](E:\IdeaWorkspace\java\doc\img\20180808221403.png)
+![](img\20180808221403.png)
 
 ```shell
 wget https://cdn.mysql.com//archives/mysql-5.7/mysql-5.7.18-1.el7.x86_64.rpm-bundle.tar
@@ -22,7 +22,7 @@ MySQL-devel-5.6.24-1.el6.x86_64
 [root@test1 files]# rpm -e --nodeps MySQL-client-5.6.24-1.el6.x86_64 MySQL-server-5.6.24-1.el6.x86_64 MySQL-devel-5.6.24-1.el6.x86_64
 ```
 
-##编辑shell脚本
+## 编辑shell脚本
 
 mysql-install.sh 文件内容（创建sh文件把内容写进去文件名）
 文件名字不同可以修改文件内容
@@ -51,14 +51,16 @@ rm -rf mysql
 mysql-5.7.14-1.el7.x86_64.rpm-bundle.tar
 mysql-install.sh
 以上两个文件放到相同目录下
+
 ```shell
 mysql-install.sh
 # 没有执行权限增加执行权限
 chmod +x  mysql-install.sh
 sh mysql-install.sh
 ```
-编辑mysql配置文件my.cnf
+## 编辑mysql配置文件my.cnf
 [mysqld]下面增加skip-grant-tables
+
 ```
 vi /etc/my.cnf
 [mysqld]
@@ -66,7 +68,8 @@ skip-grant-tables
 ：wq! 
 保存退出
 ```
-重启mysql服务
+## 重启mysql服务
+
 ```
 service mysqld restart
 ```
@@ -86,9 +89,10 @@ vi /etc/my.cnf
 skip-grant-tables
 ：wq! 
 ```
-CentOS 7 开启端口
+## CentOS 7 开启端口
 关闭firewaal类型的防火墙,安装iptables类型防火墙
 关闭防火墙
+
 ```
 sudo systemctl stop firewalld.service
 ```

@@ -1,6 +1,6 @@
 # CentOS安装solr
 
-##安装
+## 安装
 
 [solr下载地址，各种版本，我们下载tgz格式 ](http://archive.apache.org/dist/lucene/solr/)
 
@@ -26,7 +26,7 @@ bin/solr start -force 		开启solr服务
 bin/solr status			查看solr服务状态
 ```
 
-##使用
+## 使用
 
 拷贝文件
 
@@ -96,3 +96,4 @@ cp -r /mnt/solr-7.4.0/server/solr/configsets/_default/* /mnt/solr-7.4.0/server/s
    
 
 3. asdf
+

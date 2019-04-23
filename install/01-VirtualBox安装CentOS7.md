@@ -10,7 +10,7 @@
 
 ## CentOS7下载
 
-###下载
+### 下载
 
 [CentOS下载地址](http://isoredirect.centos.org/centos/7/isos/x86_64/CentOS-7-x86_64-Everything-1804.iso)
 
@@ -40,7 +40,7 @@
 - 选择动态分配（可根据磁盘大小选择，磁盘空间富裕可以选择固定大小）
 - 下一步
 
-###文件位置和大小
+### 文件位置和大小
 
 - 选择CentOS存放的目录
 - 文件大小根据自己磁盘大小设置
@@ -85,7 +85,7 @@
 | 其他主机->虚拟机 | 否   | 是              | 否             | 默认不能需要设置  |
 | 虚拟机之间       | 否   | 是              | 同网络名下可以 | 是                |
 
-####配置桥接网络
+#### 配置桥接网络
 
 - 打开Oracle VM VirtualBox管理器
 - 选择安装的CentOs7右击，选择设置
@@ -100,7 +100,7 @@
 - 输入：ip address
 - 查看ip地址，主机与虚拟机相互ping，虚拟机ping百度网址，都拼通说明配置成功
 
-####无法访问外网配置方法
+#### 无法访问外网配置方法
 
 查看主机网络信息
 
@@ -154,7 +154,7 @@
    IPADDR="192.168.9.110"
    NETMASK="255.255.255.0"
    GATEWAY="192.168.9.1"
-   DNS1="192.168.10.1"
+   DNS1="192.168.10.1":
    DNS2="192.168.9.102"
    #新增完成
    DEFROUTE="yes"
@@ -191,7 +191,11 @@
 
 4. 重新启动
 
-###脚本启动虚拟机
+### 常用命令安装
+
+yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python  
+
+### 脚本启动虚拟机
 
 - VirtualBox安装路径：C:/Program Files/Oracle/VirtualBox
 - 虚拟机名称：CentOS7
