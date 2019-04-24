@@ -224,6 +224,8 @@ zookeeper.connection.timeout.ms=60000
 ```shell
 firewall-cmd --zone=public --add-port=3883/tcp --permanent
 firewall-cmd --zone=public --add-port=2882/tcp --permanent
+firewall-cmd --zone=public --add-port=50005/tcp --permanent
+firewall-cmd --zone=public --add-port=2181/tcp --permanent
 firewall-cmd --reload
 firewall-cmd --zone=public --list-ports
 ```
