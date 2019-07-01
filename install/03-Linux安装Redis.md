@@ -63,6 +63,11 @@ redis-server /etc/redis/redis.conf
 ps -ef | grep redis --查看启动
 kill -9 进程号  --关闭服务
 ```
+## 开放端口
+firewall-cmd --zone=public --add-port=6379/tcp --permanent
+firewall-cmd --reload
+firewall-cmd --zone=public --list-ports
+
 ## 创建启动脚本
 
 ```
