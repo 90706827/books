@@ -138,3 +138,103 @@ exit;
 ```
 service mysqld restart;
 ```
+## 卸载
+```sh
+查看
+rpm -qa |grep -i mysql
+
+yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release
+卸载完了在查看一遍 没有卸载的继续执行卸载
+查看文件
+find / -name mysql
+删除文件
+rm -rf /usr/share/mysql
+```
+
+## 安装
+
+```sh
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+mysql-community-release-el7-5.noarch.rpm
+
+rpm -ivh mysql-community-release-el7-5.noarch.rpm
+
+yum install mysql-server
+
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --reload
+firewall-cmd --zone=public --list-ports
+
+service firewalld status
+
+# 开启
+
+service firewalld start
+
+# 重启
+
+service firewalld restart
+
+# 关闭
+
+service firewalld stop
+查看临时密码 
+cat /var/log/mysqld.log
+--允许外网登录
+mysql -uroot -p
+密码
+use mysql
+update user set host='%' where user='root' and host='localhost';
+UPDATE user SET password=password("yishuzhijia8225") WHERE user='root';
+flush privileges;
+exit;
+
+MYSQL 8 安装
+rpm -qa | grep mariadb
+mariadb-libs-5.5.44-2.el7.centos.x86_64
+卸载
+rpm -e --nodeps  mariadb-libs-5.5.44-2.el7.centos.x86_64
+yum install libaio
+yum install net-tools
+
+wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-8.0.13-1.el7.x86_64.rpm-bundle.tar
+解压 安装顺序
+rpm -vih mysql-community-common-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-libs-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-libs-compat-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-client-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-embedded-compat-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-server-8.0.13-1.el7.x86_64.rpm
+rpm -vih mysql-community-devel-8.0.13-1.el7.x86_64.rpm
+
+#让MYSQL大小写敏感(1-不敏感，0-敏感)/etc/my.cnf
+lower_case_table_names=1
+#加密类型
+default-authentication-plugin=mysql_native_password
+
+启动
+service mysqld start
+查看临时密码 
+cat /var/log/mysqld.log
+登录
+mysql -uroot -p 
+mysql-8 如下设置(密码必须包含：数字大小写字母特殊字符)
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Yishuzhijia-8225';
+quit;
+使用新密码重新登录
+show databases;
+use mysql;
+使用root用户可以远程连接
+update user set host = '%' where user = 'root';
+select host, user, plugin from user;
+
+查看mysql连接端口
+show global variables like 'port'; 
+
+用户创建：
+mysql> create user 'arthome'@'%' identified by 'ArtHome-8225';
+授权：
+mysql> grant all privileges on *.* to 'arthome'@'%' with grant option;
+查看用户权限：
+mysql> select host, user,authentication_string,plugin from user;
+```
