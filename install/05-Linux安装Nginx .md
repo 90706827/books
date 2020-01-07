@@ -277,6 +277,14 @@ vim /usr/local/nginx/conf/nginx.conf
         }
     }
     server {
+        listen 80; # 图片服务器
+        server_name  www.images.arts.com;
+		location / {
+            root D://temp/;
+			autoindex on; 
+         }
+    }
+    server {
         listen       80;
         server_name  www.arts.com;
 		location / {
@@ -297,3 +305,49 @@ vim /usr/local/nginx/conf/nginx.conf
 
 ```
 
+# Windos 安装Nginx
+
+[下载地址](https://nginx.org/en/download.html)
+
+下载稳定版本 解压缩到指定目录
+
+cmd命令运行nginx
+
+| 名称                      | 命令                   |
+| ------------------------- | ---------------------- |
+| 启动nginx                 | start nginx            |
+| 修改配置后重新加载生效    | nginx -s reload        |
+| 重新打开日志文件          | nginx -s reopen        |
+| 测试nginx配置文件是否正确 | nginx -t -c nginx.conf |
+| 关闭nginx ：快速停止nginx | nginx -s stop          |
+| 完整有序的停止nginx       | nginx -s quit          |
+
+## windos 开机启动 nginx 服务
+   [winsw下载地址](https://github.com/kohsuke/winsw/releases)
+   WinSW.NET4.exe （适用于64位系统。我下载这个版本）
+
+1.  将 `WinSW.NET4.exe` 复制到 `D:\nginx-1.15.4\` 目录中，并将名字修改为 `nginxservice.exe` 。
+
+2. 新建一个空的 `nginxservice.xml` 文件（名字要与`nginxservice.exe` 名字前缀保持一致，但后缀是xml） ，其内容：
+
+   ```xml
+   <service>
+   	<id>nginx</id>
+   	<name>nginx</name>
+   	<description>nginx</description>
+   	<logpath>D:\nginx-1.15.4</logpath>
+   	<logmode>roll</logmode>
+   	<depend></depend>
+   	<executable>D:\nginx-1.15.4\nginx.exe</executable>
+   	<stopexecutable>D:\nginx-1.15.4\nginx.exe -s stop</stopexecutable>
+   </service>
+   ```
+
+3. 用**管理员权限**打开cmd，进入`D:\develop_tools\nginx\nginx-1.15.4`目录下，执行`nginxservice.exe install` 命令。
+
+   ```cmd
+   D:\nginx-1.15.4>nginxservice.exe install
+   2018-11-29 10:50:30,231 INFO  - Installing the service with id 'nginx'
+   ```
+
+4. 在计算机管理–>服务中，找到 `nginx` 服务，右键启动服务。
