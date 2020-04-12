@@ -1,4 +1,6 @@
+# RibbitMQ
 
+## Linux 安装
 
 ```shell
 
@@ -91,11 +93,7 @@ rabbitmqctl cluster_status
 
 ```
 
-
-
-
-
-windows安装rabbit
+## windows安装
 
 - 安装erlang依赖
 
@@ -118,3 +116,33 @@ windows安装rabbit
   用户：guest 
 
   密码：guest
+
+## RabbitMQ常用的命令
+
+- 启动监控管理器：rabbitmq-plugins enable rabbitmq_management
+- 关闭监控管理器：rabbitmq-plugins disable rabbitmq_management
+- 启动rabbitmq：rabbitmq-service start
+- 关闭rabbitmq：rabbitmq-service stop
+- 查看所有的队列：rabbitmqctl list_queues
+- 清除所有的队列：rabbitmqctl reset
+- 关闭应用：rabbitmqctl stop_app
+- 启动应用：rabbitmqctl start_app
+
+## 用户和权限设置
+- 添加用户：rabbitmqctl add_user username password
+- 分配角色：rabbitmqctl set_user_tags username administrator
+- 新增虚拟主机：rabbitmqctl add_vhost  vhost_name
+- 将新虚拟主机授权给新用户：`rabbitmqctl set_permissions -p vhost_name username “.*” “.*” “.*”`(后面三个”*”代表用户拥有配置、写、读全部权限)
+
+## 角色说明
+
+- 超级管理员(administrator)
+   可登陆管理控制台，可查看所有的信息，并且可以对用户，策略(policy)进行操作。
+- 监控者(monitoring)
+   可登陆管理控制台，同时可以查看rabbitmq节点的相关信息(进程数，内存使用情况，磁盘使用情况等)
+- 策略制定者(policymaker)
+   可登陆管理控制台, 同时可以对policy进行管理。但无法查看节点的相关信息(上图红框标识的部分)。
+- 普通管理者(management)
+   仅可登陆管理控制台，无法看到节点信息，也无法对策略进行管理。
+- 其他
+   无法登陆管理控制台，通常就是普通的生产者和消费者。
