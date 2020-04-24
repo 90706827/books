@@ -1,0 +1,56 @@
+{
+    "title": "吉米架构师",
+    "author": "Mr.Jangni",
+    "generator": "site",
+    "language": "zh-hans",
+    "description": "开发人员学习手册",
+    "gitbook": "3.2.3",
+    "links": {
+        "sidebar": {
+            "主页": "https://wwww.baidu.com"
+        }
+    },
+    "styles": {
+        "website": "styles/website.css",
+        "ebook": "styles/ebook.css",
+        "pdf": "styles/pdf.css",
+        "mobi": "styles/mobi.css",
+        "epub": "styles/epub.css"
+    },
+    "plugins": [
+        "github",
+        "splitter",
+        "-sharing",
+        "tbfed-pagefooter",
+        "donate",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "pluginsConfig": {
+        "tbfed-pagefooter": {
+            "copyright": "Copyright &copy jangni.com 2011",
+            "modify_label": "该文件修订时间：",
+            "modify_format": "YYYY-MM-DD HH:mm:ss"
+        },
+        "github": {
+            "url": "https://github.com/90706827/books"
+        },
+        "donate": {
+            "wechat": "https://github.com/90706827/books/tree/master/install/img/weixin.png",
+            "alipay": "https://github.com/90706827/books/tree/master/install/img/zhifubao.png",
+            "title": "",
+            "button": "赏",
+            "alipayText": "支付宝打赏",
+            "wechatText": "微信打赏"
+        }
+    },
+    "variables": {
+        "phone": "18310768225",
+        "email": "90706827@163.com"
+    }
+}
