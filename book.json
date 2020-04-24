@@ -23,13 +23,13 @@
         "-sharing",
         "tbfed-pagefooter",
         "donate",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
+        "hide-element",
+        "back-to-top-button",
+        "expandable-chapters",
+        "code",
+        "search-pro",
+        "insert-logo",
+        "custom-favicon"
     ],
     "pluginsConfig": {
         "tbfed-pagefooter": {
@@ -47,7 +47,17 @@
             "button": "赏",
             "alipayText": "支付宝打赏",
             "wechatText": "微信打赏"
-        }
+        },
+        "hide-element": {
+            "elements": [
+                ".gitbook-link"
+            ]
+        },
+        "insert-logo": {
+            "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPCVAHa7UVzayjRVcW6NUVcxt0fu_FwsHx-khoNeGJePOUgQk1&usqp=CAU",
+            "style": "background: none; max-height: 30px; min-height: 30px"
+        },
+        "favicon": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRPCVAHa7UVzayjRVcW6NUVcxt0fu_FwsHx-khoNeGJePOUgQk1&usqp=CAU"
     },
     "variables": {
         "phone": "18310768225",
