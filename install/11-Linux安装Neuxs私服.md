@@ -53,9 +53,9 @@ password: admin123
 
 #### 创建目录
 
-![实例](/img/nexus1.png)
+![实例](img/nexus1.png)
 
-![实例](/img/nexus2.png)
+![实例](img/nexus2.png)
 
 #### Setting.xml配置
 

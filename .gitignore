@@ -1,0 +1,6 @@
+# Dependency directory
+node_modules
+# Book build output
+_book
+# code software
+.idea
