@@ -1,8 +1,6 @@
 # Summary
 
-* [前言](README.MD)
-
-* [安装](INIT.MD)
+* [吉米架构师](README.MD)
 
 ## 运维篇
 * 第一章 环境部署

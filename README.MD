@@ -1,27 +1,156 @@
 ![艾薇儿-拉维尼](install/img/Avril.jpg)
 
-艾薇儿·拉维尼（Avril Ramona Lavigne），1984年9月27日出生于加拿大安大略省贝尔维尔，歌手、词曲作者、演员，拥有加拿大、法国双国籍 。
-2002年，发行个人首张录音室专辑《Let Go》，从而正式出道 。2003年，入围第45届格莱美奖最佳新人奖，并凭借歌曲《Sk8er Boi》以及《Complicated》分别入围最佳摇滚女歌手奖和最佳流行女歌手奖 。2004年，凭借歌曲《I'm with You》和《Losing Grip》分别入围第46届格莱美奖的最佳流行女歌手奖以及最佳摇滚女歌手奖 ；同年，发行第二张个人录音室专辑《Under My Skin》 。2007年，个人单曲《Girlfriend》在美国公告牌百强单曲榜夺冠；4月，发行第三张个人录音室专辑《The Best Damn Thing》；同年，获得MTV欧洲音乐奖最佳独唱歌手奖 。2010年，献唱电影《爱丽丝梦游奇境》主题曲《Alice》 。2011年，发行第四张个人录音室专辑《Goodbye Lullaby》。2013年，发行同名录音室专辑《艾薇儿·拉维尼》。2014年，因患莱姆病而渐渐淡出乐坛  。2018年，发行个人单曲《Head Above Water》而正式回归   。2019年，发行第六张个人录音室专辑《Head Above Water》
+# Setup and Installation of GitBook
 
-# BOOK
+Getting GitBook installed and ready-to-go should only take a few minutes.
 
-## 安装手册
-### 01-VirtualBox安装CentOS7
-### 02-Linux安装jdk1.8
-### 03-Linux安装Redis
-### 04-Linux安装多Tomcat
-### 05-Linux安装Nginx
-### 06-Linux安装solr
-### 07-Linux安装mysql-5.7
-### 08-Linux安装Kafka集群
-### 09-Linux安装FastDFS
-### 10-Linux安装GitLab搭建私服
-### 11-Linux安装Neuxs私服
-### 12-Linux安装RibbitMq
-### 13-Idea 实用插件
-### 14-Linux安装ELK
-## 技术文章
-### Spring @Transactional 注解详解
-### Mybatis Generator配置详解
-### JVM性能调优
-### 证书公私钥生成
+### legacy.gitbook.com
+
+[legacy.gitbook.com](https://legacy.gitbook.com) is an easy to use solution to write, publish and host books. It is the easiest solution for publishing your content and collaborating on it.
+
+It integrates well with the [GitBook Editor](https://legacy.gitbook.com/editor).
+
+### Local Installation
+
+##### Requirements
+
+Installing GitBook is easy and straightforward. Your system just needs to meet these two requirements:
+
+* NodeJS (v4.0.0 and above is recommended)
+* Windows, Linux, Unix, or Mac OS X
+
+##### Install with NPM
+
+The best way to install GitBook is via **NPM**. At the terminal prompt, simply run the following command to install GitBook:
+
+```
+$ npm install -g gitbook-cli
+```
+
+`gitbook-cli` is an utility to install and use multiple versions of GitBook on the same system. It will automatically install the required version of GitBook to build a book.
+
+##### Create a book
+
+GitBook can setup a boilerplate book:
+
+```
+$ gitbook init
+```
+
+If you wish to create the book into a new directory, you can do so by running `gitbook init ./directory`
+
+Preview and serve your book using:
+
+```
+$ gitbook serve
+```
+
+Or build the static website using:
+
+```
+$ gitbook build
+```
+
+##### Install pre-releases
+
+`gitbook-cli` makes it easy to download and install other versions of GitBook to test with your book:
+
+```
+$ gitbook fetch beta
+```
+
+Use `gitbook ls-remote` to list remote versions available for install.
+
+##### Debugging
+
+You can use the options `--log=debug` and `--debug` to get better error messages (with stack trace). For example:
+
+```
+$ gitbook build ./ --log=debug --debug
+```
+
+#### book.json Config File
+
+```
+$ gitbook install
+```
+
+#### book config info
+
+```json
+{
+    "title": "标题",
+    "author": "作者",
+    "generator": "site",
+    "language": "zh-hans",
+    "description": "book描述",
+    "gitbook": "3.2.3",
+    "-links": {
+        "sidebar": {
+            "主页": "https://wwww.baidu.com 暂时注销"
+        }
+    },
+    "styles": {
+        "website": "styles/website.css",
+        "ebook": "styles/ebook.css",
+        "pdf": "styles/pdf.css",
+        "mobi": "styles/mobi.css",
+        "epub": "styles/epub.css"
+    },
+    "plugins": [
+        "github",
+        "splitter",
+        "-sharing",
+        "tbfed-pagefooter",
+        "donate",
+        "hide-element",
+        "back-to-top-button",
+        "expandable-chapters",
+        "code",
+        "search-pro",
+        "insert-logo",
+        "favicon"
+    ],
+    "pluginsConfig": {
+        "tbfed-pagefooter": {
+            "copyright": "Copyright &copy Mr.Jangni 2011",
+            "modify_label": "该文件修订时间：",
+            "modify_format": "YYYY-MM-DD HH:mm:ss"
+        },
+        "github": {
+            "url": "https://github.com/90706827/books"
+        },
+        "donate": {
+            "wechat": "img/weixin.png",
+            "alipay": "img/alipay.png",
+            "title": "",
+            "button": "打赏",
+            "alipayText": "支付宝打赏",
+            "wechatText": "微信打赏"
+        },
+        "hide-element": {
+            "elements": [
+                ".gitbook-link"
+            ]
+        },
+        "insert-logo": {
+            "url": "install/img/jm_logo.png",
+            "style": "background: none; max-height: 30px; min-height: 30px"
+        },
+        "favicon": {
+            "shortcut": "install/img/favicon.ico",
+            "bookmark": "install/img/favicon.ico",
+            "appleTouch": "install/img/favicon.ico",
+            "appleTouchMore": {
+                "120x120": "install/img/favicon.ico",
+                "180x180": "install/img/favicon.ico"
+            }
+        }
+    },
+    "variables": {
+        "phone": "18310768225",
+        "email": "90706827@163.com"
+    }
+}
+```
+

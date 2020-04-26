@@ -129,7 +129,7 @@
 
   ```sh
   export MONGODB_HOME=/usr/local/mongodb
-  exPort PAHT=${MONGODB_HOME}/bin:$PATH
+  export PAHT=${MONGODB_HOME}/bin:$PATH
   ```
 
   - 生效
