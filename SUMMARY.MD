@@ -11,7 +11,7 @@
     * [MongoDB安装](install/MongoDB安装.md)
     * [Redis安装](install/Redis安装.md)
     * [Nginx安装](install/Nginx安装.md)
-    * [Tomcat安装](install/Tomcat.md)
+    * [Tomcat安装](install/Tomcat安装.md)
     * [RibbitMQ安装](install/RibbitMQ安裝.md)
     * [Kafka安装](install/Kafka安装.md)
     * [Solr安装](install/Solr安装.md)
