@@ -348,6 +348,10 @@ cmd命令运行nginx
    ```cmd
    D:\nginx-1.15.4>nginxservice.exe install
    2018-11-29 10:50:30,231 INFO  - Installing the service with id 'nginx'
+   
+   --nginxservice.exe uninstall
+   --nginxservice.exe start
+   --nginxservice.exe stop
    ```
 
 4. 在计算机管理–>服务中，找到 `nginx` 服务，右键启动服务。
