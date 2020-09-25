@@ -54,4 +54,5 @@ Java编程神器
 ![在这里插入图片描述](img/Lombok plugin.gif)
 ## CodeGlance
 大屏幕神器，在编辑区的右侧显示的代码地图，小屏幕不推荐使用。
-
+## Spring Assistant
+创建 Spring Boot 项目
