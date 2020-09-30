@@ -56,3 +56,7 @@ Java编程神器
 大屏幕神器，在编辑区的右侧显示的代码地图，小屏幕不推荐使用。
 ## Spring Assistant
 创建 Spring Boot 项目
+## Grep Console
+日志打印插件
+下载匹配版本 IDEA-设置-plugins中手动安装
+https://plugins.jetbrains.com/plugin/7125-grep-console
