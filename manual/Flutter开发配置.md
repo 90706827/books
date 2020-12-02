@@ -12,6 +12,12 @@
 
   Path ： D:\flutter\bin
 
+### Dart SDK 下载
+
+- [Dart SDK](https://dart.dev/tools/sdk/archive)
+
+ 下载后放置目录：D:\dart-sdk
+
 ### Android Studio 安装
 - Android Studio 下载 [DOWNLOAD ANDROID STUDIO ](https://developer.android.com/studio)
 
