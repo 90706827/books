@@ -105,6 +105,98 @@
 
   
 
+### VSCode
+
+### 插件
+
+- Flutter
+- Dart
+- GitLens
+- Bracket Pair Colorizer 2
+- Pubspec Assist
+- Material Icon Theme
+- Todo tree
+- Color Highlight
+- Image Preview
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
