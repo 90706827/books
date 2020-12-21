@@ -56,6 +56,8 @@ ENTRYPOINT ["java","-jar","easycms.jar"]
 docker build -t easycms .
 ## 查看images
 docker images
+## 删除images
+docker rmi easycms
 ## 查看运行的程序
 docker ps
 ## 停止运行程序
