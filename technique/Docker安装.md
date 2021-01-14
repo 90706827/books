@@ -107,7 +107,335 @@ firewall-cmd --reload
 
 
 
+## 安装Mysql
 
+### 创建路径
+
+```sh
+mkdir -p /root/mysql/data
+mkdir -p /root/mysql/logs
+mkdir -p /root/mysql/conf
+```
+
+### 创建配置文件
+
+```sh
+sudo tee /root/my.cnf <<-'EOF'
+[mysqld]
+user=mysql
+character-set-server=utf8
+default_authentication_plugin=mysql_native_password
+secure_file_priv=/var/lib/mysql
+expire_logs_days=7
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+max_connections=1000
+[client]
+default-character-set=utf8
+[mysql]
+default-character-set=utf8
+EOF
+```
+
+### 安装
+
+```sh
+docker pull mysql:latest
+## -v：主机和容器的目录映射关系，":"前为主机目录，之后为容器目录
+## --restart=always： 当Docker 重启时，容器会自动启动。
+## --privileged=true：容器内的root拥有真正root权限，否则容器内root只是外部普通用户权限
+
+docker run \
+--restart=always \
+--privileged=true \
+--name mysql \
+-v /root/mysql/conf/:/etc/mysql \
+-v /root/mysql/my.cnf:/etc/mysql/my.cnf \
+-v /root/mysql/logs/:/var/log/mysql \
+-v /root/mysql/data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=YU8K3HDF8SH324K2347SJ \
+-p 3306:3306 \
+-d mysql:latest
+```
+
+### 配置
+
+```sh
+## 进入mysql容器
+docker exec -it mysql /bin/bash
+## 登录
+mysql -u root -p
+## 输入密码
+## 创建数据库
+create database 数据库名;
+## 创建远程账户
+create user '用户名'@'%' identified by '密码';
+## 设置允许访问
+grant all privileges on *.* to 用户名@'%' with grant option;
+## 刷新权限
+flush privileges;
+## 退出
+exit;
+
+##实例
+create database cms;
+create user 'userroot'@'%' identified by 'YU8K3HDF8SH324K2347SJ';
+grant all privileges on *.* to userroot@'%' with grant option;
+```
+
+### 安装Nginx
+
+```sh
+mkdir -p /root/nginx/html
+mkdir -p /root/nginx/conf/conf.d
+mkdir -p /root/nginx/logs
+
+sudo tee /root/nginx/html/index.html <<-'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>北京欢迎您！</title>
+</head>
+<body>
+<h1>北京欢迎您！</h1>
+</body>
+</html>
+EOF
+## 创建nginx.id
+sudo tee /root/nginx/conf/nginx.pid <<-'EOF'
+1
+EOF
+## 创建 nginx.conf
+sudo tee /root/nginx/conf/nginx.conf <<-'EOF'
+user  root;
+worker_processes  auto;
+
+error_log  /var/logs/nginx/error.log warn;
+pid        	/etc/nginx/conf/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       /etc/nginx/conf/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/logs/nginx/access.log  main;
+
+    sendfile			      on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    client_max_body_size 20m;
+    include /etc/nginx/conf/conf.d/*.conf;
+}
+EOF
+## 创建默认conf
+sudo tee /root/nginx/conf/conf.d/default.conf <<-'EOF'
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+}
+EOF
+## 创建 mime.types
+sudo tee /root/nginx/conf/mime.types <<-'EOF'
+types {
+    text/html                                        html htm shtml;
+    text/css                                         css;
+    text/xml                                         xml;
+    image/gif                                        gif;
+    image/jpeg                                       jpeg jpg;
+    application/javascript                           js;
+    application/atom+xml                             atom;
+    application/rss+xml                              rss;
+
+    text/mathml                                      mml;
+    text/plain                                       txt;
+    text/vnd.sun.j2me.app-descriptor                 jad;
+    text/vnd.wap.wml                                 wml;
+    text/x-component                                 htc;
+
+    image/png                                        png;
+    image/svg+xml                                    svg svgz;
+    image/tiff                                       tif tiff;
+    image/vnd.wap.wbmp                               wbmp;
+    image/webp                                       webp;
+    image/x-icon                                     ico;
+    image/x-jng                                      jng;
+    image/x-ms-bmp                                   bmp;
+
+    font/woff                                        woff;
+    font/woff2                                       woff2;
+
+    application/java-archive                         jar war ear;
+    application/json                                 json;
+    application/mac-binhex40                         hqx;
+    application/msword                               doc;
+    application/pdf                                  pdf;
+    application/postscript                           ps eps ai;
+    application/rtf                                  rtf;
+    application/vnd.apple.mpegurl                    m3u8;
+    application/vnd.google-earth.kml+xml             kml;
+    application/vnd.google-earth.kmz                 kmz;
+    application/vnd.ms-excel                         xls;
+    application/vnd.ms-fontobject                    eot;
+    application/vnd.ms-powerpoint                    ppt;
+    application/vnd.oasis.opendocument.graphics      odg;
+    application/vnd.oasis.opendocument.presentation  odp;
+    application/vnd.oasis.opendocument.spreadsheet   ods;
+    application/vnd.oasis.opendocument.text          odt;
+    application/vnd.openxmlformats-officedocument.presentationml.presentation
+                                                     pptx;
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                                                     xlsx;
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                                                     docx;
+    application/vnd.wap.wmlc                         wmlc;
+    application/x-7z-compressed                      7z;
+    application/x-cocoa                              cco;
+    application/x-java-archive-diff                  jardiff;
+    application/x-java-jnlp-file                     jnlp;
+    application/x-makeself                           run;
+    application/x-perl                               pl pm;
+    application/x-pilot                              prc pdb;
+    application/x-rar-compressed                     rar;
+    application/x-redhat-package-manager             rpm;
+    application/x-sea                                sea;
+    application/x-shockwave-flash                    swf;
+    application/x-stuffit                            sit;
+    application/x-tcl                                tcl tk;
+    application/x-x509-ca-cert                       der pem crt;
+    application/x-xpinstall                          xpi;
+    application/xhtml+xml                            xhtml;
+    application/xspf+xml                             xspf;
+    application/zip                                  zip;
+
+    application/octet-stream                         bin exe dll;
+    application/octet-stream                         deb;
+    application/octet-stream                         dmg;
+    application/octet-stream                         iso img;
+    application/octet-stream                         msi msp msm;
+
+    audio/midi                                       mid midi kar;
+    audio/mpeg                                       mp3;
+    audio/ogg                                        ogg;
+    audio/x-m4a                                      m4a;
+    audio/x-realaudio                                ra;
+
+    video/3gpp                                       3gpp 3gp;
+    video/mp2t                                       ts;
+    video/mp4                                        mp4;
+    video/mpeg                                       mpeg mpg;
+    video/quicktime                                  mov;
+    video/webm                                       webm;
+    video/x-flv                                      flv;
+    video/x-m4v                                      m4v;
+    video/x-mng                                      mng;
+    video/x-ms-asf                                   asx asf;
+    video/x-ms-wmv                                   wmv;
+    video/x-msvideo                                  avi;
+}
+EOF
+## 构建
+docker pull nginx:latest
+## 只读:ro
+## 运行
+docker run \
+--restart=always \
+--name nginx \
+-v /root/nginx/html:/usr/share/nginx/html:ro \
+-v /root/nginx/logs:/var/logs/nginx \
+-v /root/nginx/conf/conf.d:/etc/nginx/conf/conf.d \
+-v /root/nginx/conf:/etc/nginx/conf \
+-p 80:80 \
+-p 443:443 \
+-d nginx:latest
+
+## 开放防火墙端口
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+## 刷新防火墙
+firewall-cmd --reload
+
+
+
+docker run -p 80:80 --restart=always --name nginx \
+-v /root/nginx/html:/usr/share/nginx/html \
+-v /root/nginx/config/nginx.conf:/etc/nginx/nginx.conf \
+-v /root/nginx/conf.d:/etc/nginx/conf.d \
+-v /root/nginx/logs:/var/log/nginx \
+nginx
+
+
+sudo tee /root/nginx/conf/nginx.conf <<-'EOF'
+user  root;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log warn;
+pid        	/var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       		/etc/nginx/mime.types;
+    default_type  		application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile			      on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    client_max_body_size 20m;
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
+
+
+sudo tee /root/nginx/conf.d/default.conf <<-'EOF'
+server {
+    listen       80;
+    server_name  www.zgcenv.com;
+
+    location / {
+        root   /usr/share/nginx/html/www.zgcenv.com;
+        index  index.html index.htm;
+    }
+}
+```
+
+
+
+## 安装Redis
+
+```sh
+docker pull redis:latest
+docker run -p 6379:6379 \
+--restart=always \
+--name redis \
+-d redis:latest \
+-- requirepass="QWER1234ASDF" \
+
+redis-cli -h 127.0.0.1 -p 6379
+
+auth QWER1234ASDF
+```
 
 
 
