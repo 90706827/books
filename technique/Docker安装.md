@@ -77,10 +77,13 @@ sudo systemctl restart docker
 
 ### 运行Portainer
 
--- 创建目录/opt/docker/portainer/data
-
 ```sh
-docker run -d -p 9000:9000 --restart=always --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /opt/docker/portainer/data:/data docker.io/portainer/portainer
+mkdir -p /root/portainer/data
+docker run -d -p 9000:9000
+--restart=always \
+--name portainer \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /root/portainer/data:/data docker.io/portainer/portainer
 ```
 
 ### 链接远程Docker
@@ -91,7 +94,8 @@ docker run -d -p 9000:9000 --restart=always --name portainer -v /var/run/docker.
 ## 开启docker的tcp链接方式
 ## 编辑docker.service
 vim /usr/lib/systemd/system/docker.service
-## 修改ExecStart字段
+## 修改ExecStart字段 https://www.kubernetes.org.cn/5883.html
+## 设置有问题
 ExecStart=/usr/bin/dockerd-current -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock 
 ## 重新读取docker配置文件，
 systemctl daemon-reload
