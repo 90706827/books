@@ -75,18 +75,29 @@ sudo systemctl restart docker
 
 ## 安装Portainer
 
-### 运行Portainer
+### 创建目录
 
 ```sh
 mkdir -p /root/portainer/data
-docker run -d -p 9000:9000
---restart=always \
---name portainer \
--v /var/run/docker.sock:/var/run/docker.sock \
--v /root/portainer/data:/data docker.io/portainer/portainer
 ```
 
-### 链接远程Docker
+### 安装运行
+
+```sh
+## 拉取配置
+docker pull portainer/portainer
+## 运行镜像
+docker run \
+--name portainer \
+--restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /root/portainer/data:/data \
+-p 9000:9000 \
+-d portainer/portainer
+
+```
+
+### 远程连接
 
 #### 配置远程Docker
 
