@@ -1,5 +1,12 @@
 # Docker安装与应用
 
+- Linux系统信息
+
+  ```sh
+  ## cat /etc/redhat-release 
+  CentOS Linux release 7.9.2009 (Core)
+  ```
+
 ## 安装Docker
 
 ### 常用插件
@@ -73,15 +80,134 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-## 安装Portainer
+## 搭建Portainer集群
 
-### 创建目录
+### 环境配置
+
+| 主机名称     | IP地址       | 节点     |
+| ------------ | ------------ | -------- |
+| docker-node1 | 192.168.1.23 | 管理节点 |
+| docker-node2 | 192.168.1.24 | 子节点   |
+|              |              |          |
+
+#### node1
 
 ```sh
+hostnamectl set-hostname docker-node1
+echo "docker-node1" > /etc/hostname
+vim /etc/hosts
+192.168.1.23    docker-node1
+192.168.1.24    docker-node2
+
+## 开启docker的tcp链接方式
+## 编辑docker.service
+vim /usr/lib/systemd/system/docker.service
+## 修改ExecStart字段 https://www.kubernetes.org.cn/5883.html
+## 设置有问题
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 --containerd=/run/containerd/containerd.sock
+## 重新读取docker配置文件，
+systemctl daemon-reload
+## 重新启动docker服务
+systemctl restart docker
+## 关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+## 测试关闭
+firewall-cmd --state
+not running
+## 关闭selinux
+## 临时关闭
+setenforce 0
+## 查看状态
+getenforce
+## 临时开启
+setenforce 1
+## 永久关闭 修改如下
+vi /etc/sysconfig/selinux
+SELINUX=disabled
+
+```
+
+#### node2
+
+```sh
+hostnamectl set-hostname docker-node1
+echo "docker-node1" > /etc/hostname
+vim /etc/hosts
+192.168.1.23    docker-node1
+192.168.1.24    docker-node2
+
+## 开启docker的tcp链接方式
+## 编辑docker.service
+vim /usr/lib/systemd/system/docker.service
+## 修改ExecStart字段 https://www.kubernetes.org.cn/5883.html
+## 设置有问题
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 --containerd=/run/containerd/containerd.sock
+## 重新读取docker配置文件，
+systemctl daemon-reload
+## 重新启动docker服务
+systemctl restart docker
+## 开放防火墙端口
+firewall-cmd --zone=public --add-port=2375/tcp --permanent
+## 刷新防火墙
+firewall-cmd --reload
+## 关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+## 测试关闭
+firewall-cmd --state
+not running
+## 关闭selinux（这里临时关闭）
+## 临时关闭
+setenforce 0
+## 查看状态
+getenforce
+## 临时开启
+setenforce 1
+## 永久关闭 修改如下
+vi /etc/sysconfig/selinux
+SELINUX=disabled
+```
+
+```bash
+## 如果开启防火墙，则需要在所有节点的防火墙上依次放行2377/tcp（管理端口）、7946/udp（节点间通信端口）、4789/udp（overlay 网络端口）端口。
+```
+
+### 安装Swarm
+
+#### node1
+
+```sh
+## 创建镜像
+docker pull swarm
+## 初始化
+docker swarm init --advertise-addr 192.168.1.23
+## 得到token 所有集群节点执行此join
+docker swarm join --token SWMTKN-1-5u4f9thom3mxit3ey59cr3sdgluqi56bad2g0wrwba5mcxmcke-5jopnh00ammiyv7uuosbf3cnr 192.168.1.23:2377
+## 查看集群节点
+docker node list
+```
+
+#### node2
+
+```sh
+## 创建镜像
+docker pull swarm
+## 执行node1中的token
+docker swarm join --token SWMTKN-1-5u4f9thom3mxit3ey59cr3sdgluqi56bad2g0wrwba5mcxmcke-5jopnh00ammiyv7uuosbf3cnr 192.168.1.23:2377
+
+```
+
+### 安装Portainer
+
+#### 创建目录
+
+```sh
+## node1节点
 mkdir -p /root/portainer/data
 ```
 
-### 安装运行
+#### 安装运行
 
 ```sh
 ## 拉取配置
@@ -97,103 +223,15 @@ docker run \
 
 ```
 
-### 远程连接
+#### 使用
 
-#### 配置远程Docker
-
-```sh
-## 开启docker的tcp链接方式
-## 编辑docker.service
-vim /usr/lib/systemd/system/docker.service
-## 修改ExecStart字段 https://www.kubernetes.org.cn/5883.html
-## 设置有问题
-ExecStart=/usr/bin/dockerd-current -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock 
-## 重新读取docker配置文件，
-systemctl daemon-reload
-## 重新启动docker服务
-systemctl restart docker
-## 开放防火墙端口
-firewall-cmd --zone=public --add-port=2375/tcp --permanent
-## 刷新防火墙
-firewall-cmd --reload
-```
-
-## 安装Swarm
+- [访问Protainer](http://192.168.1.23:9000)
+- 初始化登录密码
+-  集群模式, 一定要选择Remote, 输入docker-node1的ip，然后点击Connect；
+-  击左边栏的"Endpoints" - "+add endpoint", 选择"Docker"，添加集群节点；
+- Home页可以看到节点信息
 
 
-
-## 安装Mysql
-
-### 创建路径
-
-```sh
-mkdir -p /root/mysql/data /root/mysql/logs /root/mysql/conf
-```
-
-### 配置文件
-
-```sh
-sudo tee /root/my.cnf <<-'EOF'
-[mysqld]
-user=mysql
-character-set-server=utf8
-default_authentication_plugin=mysql_native_password
-secure_file_priv=/var/lib/mysql
-expire_logs_days=7
-sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
-max_connections=1000
-[client]
-default-character-set=utf8
-[mysql]
-default-character-set=utf8
-EOF
-```
-
-### 安装
-
-```sh
-docker pull mysql:latest
-## -v：主机和容器的目录映射关系，":"前为主机目录，之后为容器目录
-## --restart=always： 当Docker 重启时，容器会自动启动。
-## --privileged=true：容器内的root拥有真正root权限，否则容器内root只是外部普通用户权限
-
-docker run \
---restart=always \
---privileged=true \
---name mysql \
--v /root/mysql/conf/:/etc/mysql \
--v /root/mysql/my.cnf:/etc/mysql/my.cnf \
--v /root/mysql/logs/:/var/log/mysql \
--v /root/mysql/data:/var/lib/mysql \
--e MYSQL_ROOT_PASSWORD=YU8K3HDF8SH324K2347SJ \
--p 3306:3306 \
--d mysql:latest
-```
-
-### 测试数据
-
-```sh
-## 进入mysql容器
-docker exec -it mysql /bin/bash
-## 登录
-mysql -u root -p
-## 输入密码
-## 创建数据库
-create database 数据库名;
-## 创建远程账户
-create user '用户名'@'%' identified by '密码';
-## 设置允许访问
-grant all privileges on *.* to 用户名@'%' with grant option;
-## 刷新权限
-flush privileges;
-## 退出
-exit;
-
-##实例
-create database cms;
-create user 'userroot'@'%' identified by 'YU8K3HDF8SH324K2347SJ';
-grant all privileges on *.* to userroot@'%' with grant option;
-```
 
 ## 安装Nginx
 
@@ -417,7 +455,6 @@ firewall-cmd --reload
 
 
 ```sh
-
 docker run -p 80:80 --restart=always --name nginx \
 -v /root/nginx/html:/usr/share/nginx/html \
 -v /root/nginx/config/nginx.conf:/etc/nginx/nginx.conf \
@@ -467,6 +504,81 @@ server {
         index  index.html index.htm;
     }
 }
+```
+
+
+
+## 安装Mysql
+
+### 创建路径
+
+```sh
+mkdir -p /root/mysql/data /root/mysql/logs /root/mysql/conf
+```
+
+### 配置文件
+
+```sh
+sudo tee /root/my.cnf <<-'EOF'
+[mysqld]
+user=mysql
+character-set-server=utf8
+default_authentication_plugin=mysql_native_password
+secure_file_priv=/var/lib/mysql
+expire_logs_days=7
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+max_connections=1000
+[client]
+default-character-set=utf8
+[mysql]
+default-character-set=utf8
+EOF
+```
+
+### 安装
+
+```sh
+docker pull mysql:latest
+## -v：主机和容器的目录映射关系，":"前为主机目录，之后为容器目录
+## --restart=always： 当Docker 重启时，容器会自动启动。
+## --privileged=true：容器内的root拥有真正root权限，否则容器内root只是外部普通用户权限
+
+docker run \
+--restart=always \
+--privileged=true \
+--name mysql \
+-v /root/mysql/conf/:/etc/mysql \
+-v /root/mysql/my.cnf:/etc/mysql/my.cnf \
+-v /root/mysql/logs/:/var/log/mysql \
+-v /root/mysql/data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=YU8K3HDF8SH324K2347SJ \
+-p 3306:3306 \
+-d mysql:latest
+```
+
+### 测试数据
+
+```sh
+## 进入mysql容器
+docker exec -it mysql /bin/bash
+## 登录
+mysql -u root -p
+## 输入密码
+## 创建数据库
+create database 数据库名;
+## 创建远程账户
+create user '用户名'@'%' identified by '密码';
+## 设置允许访问
+grant all privileges on *.* to 用户名@'%' with grant option;
+## 刷新权限
+flush privileges;
+## 退出
+exit;
+
+##实例
+create database cms;
+create user 'userroot'@'%' identified by 'YU8K3HDF8SH324K2347SJ';
+grant all privileges on *.* to userroot@'%' with grant option;
 ```
 
 
