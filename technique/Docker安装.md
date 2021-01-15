@@ -2,7 +2,7 @@
 
 ## 安装Docker
 
-- 常用插件
+### 常用插件
 
 ```sh
 yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python lrzsz yum-utils device-mapper-persistent-data lvm2
@@ -11,9 +11,9 @@ yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ bui
 yum -y update
 ```
 
-- 升级Bash
+### 升级Bash
 
-  [下载地址](http://ftp.gnu.org/gnu/bash/)
+[下载地址](http://ftp.gnu.org/gnu/bash/)
 
 ```sh
 ## 当前最新版本5.1
@@ -25,7 +25,7 @@ cd bash-5.1
 bash --version
 ```
 
-- 安装
+### 安装
 
 ```sh
 ## 安装必要的一些系统工具
@@ -58,9 +58,9 @@ systemctl enable docker.service
 # sudo yum -y install docker-ce-[VERSION]
 ```
 
-- 阿里云镜像加速器配置
+### 配置阿里云镜像加速器
 
-  [镜像地址](https://cr.console.aliyun.com/cn-shanghai/instances/mirrors)
+[镜像地址](https://cr.console.aliyun.com/cn-shanghai/instances/mirrors)
 
 ```sh
 sudo mkdir -p /etc/docker
@@ -116,12 +116,10 @@ firewall-cmd --reload
 ### 创建路径
 
 ```sh
-mkdir -p /root/mysql/data
-mkdir -p /root/mysql/logs
-mkdir -p /root/mysql/conf
+mkdir -p /root/mysql/data /root/mysql/logs /root/mysql/conf
 ```
 
-### 创建配置文件
+### 配置文件
 
 ```sh
 sudo tee /root/my.cnf <<-'EOF'
@@ -161,7 +159,7 @@ docker run \
 -d mysql:latest
 ```
 
-### 配置
+### 测试数据
 
 ```sh
 ## 进入mysql容器
@@ -186,13 +184,19 @@ create user 'userroot'@'%' identified by 'YU8K3HDF8SH324K2347SJ';
 grant all privileges on *.* to userroot@'%' with grant option;
 ```
 
-### 安装Nginx
+## 安装Nginx
+
+### 创建目录
 
 ```sh
-mkdir -p /root/nginx/html
-mkdir -p /root/nginx/conf/conf.d
-mkdir -p /root/nginx/logs
+mkdir -p /root/nginx/html /root/nginx/conf/conf.d /root/nginx/logs
+```
 
+### 配置文件
+
+#### 配置默认页面
+
+```sh
 sudo tee /root/nginx/html/index.html <<-'EOF'
 <!DOCTYPE html>
 <html lang="en">
@@ -205,16 +209,24 @@ sudo tee /root/nginx/html/index.html <<-'EOF'
 </body>
 </html>
 EOF
-## 创建nginx.id
+```
+
+#### 配置nginx.pid
+
+```sh
 sudo tee /root/nginx/conf/nginx.pid <<-'EOF'
 1
 EOF
-## 创建 nginx.conf
+```
+
+#### 配置nginx.conf
+
+```sh
 sudo tee /root/nginx/conf/nginx.conf <<-'EOF'
 user  root;
 worker_processes  auto;
 
-error_log  /var/logs/nginx/error.log warn;
+error_log  /var/log/nginx/error.log warn;
 pid        	/etc/nginx/conf/nginx.pid;
 
 events {
@@ -229,7 +241,7 @@ http {
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log  /var/logs/nginx/access.log  main;
+    access_log  /var/log/nginx/access.log  main;
 
     sendfile			      on;
     tcp_nodelay         on;
@@ -239,7 +251,11 @@ http {
     include /etc/nginx/conf/conf.d/*.conf;
 }
 EOF
-## 创建默认conf
+```
+
+#### 配置default.conf
+
+```sh
 sudo tee /root/nginx/conf/conf.d/default.conf <<-'EOF'
 server {
     listen       80;
@@ -249,9 +265,18 @@ server {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
     }
+    
+    error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+    }
 }
 EOF
-## 创建 mime.types
+```
+
+#### 配置 mime.types
+
+```sh
 sudo tee /root/nginx/conf/mime.types <<-'EOF'
 types {
     text/html                                        html htm shtml;
@@ -350,15 +375,20 @@ types {
     video/x-msvideo                                  avi;
 }
 EOF
-## 构建
-docker pull nginx:latest
+```
+
+### 安装运行
+
+```sh
+## 拉取镜像
+docker pull nginx
 ## 只读:ro
 ## 运行
 docker run \
 --restart=always \
 --name nginx \
 -v /root/nginx/html:/usr/share/nginx/html:ro \
--v /root/nginx/logs:/var/logs/nginx \
+-v /root/nginx/logs:/var/log/nginx \
 -v /root/nginx/conf/conf.d:/etc/nginx/conf/conf.d \
 -v /root/nginx/conf:/etc/nginx/conf \
 -p 80:80 \
@@ -371,7 +401,11 @@ firewall-cmd --zone=public --add-port=443/tcp --permanent
 ## 刷新防火墙
 firewall-cmd --reload
 
+```
 
+
+
+```sh
 
 docker run -p 80:80 --restart=always --name nginx \
 -v /root/nginx/html:/usr/share/nginx/html \
@@ -426,19 +460,136 @@ server {
 
 
 
-## 安装Redis
+## 安装MongoDB
+
+### 安装运行
 
 ```sh
-docker pull redis:latest
-docker run -p 6379:6379 \
+## 拉取镜像
+docker pull mongo
+## 运行 --auth(不设置密码可以去掉)
+docker run \
 --restart=always \
+--name mongo \
+-v /root/mongo/configdb:/data/configdb \
+-v /root/mongo/db:/data/db \
+-p 27017:27017 \
+-d mongo:latest \
+--auth
+
+```
+
+### 测试数据
+
+```sh
+## admin用户进入mongo
+docker exec -it mongo mongo admin
+## 创建管理员账户密码数据库
+db.createUser({ user: 'mongo', pwd: 'QWER1234ASDF', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
+## 管理员身份认证
+db.auth("mongo","QWER1234ASDF");
+## 创建 用户、密码和数据库
+db.createUser({ user: '用户名', pwd: '密码', roles: [ { role: "readWrite", db: "数据库名" } ] });
+## 对用户身份认证
+db.auth("用户名","密码");
+## 切换数据库
+use 数据库名
+## 向数据库test表插入数据
+db.test.save({name:"zhangsan"});
+## 查询test表数据
+db.test.find();
+## 退出
+exit;
+```
+
+## 安装Redis
+
+[官网redis配置文件](http://download.redis.io/redis-stable/redis.conf)
+
+### 创建目录
+
+```sh
+mkdir -p /root/redis/data
+mkdir -p /root/redis/conf
+```
+
+### 配置文件
+
+```sh
+sudo tee /root/redis/conf/redis.conf <<-'EOF'
+## 注释掉
+#bind 127.0.0.1 
+## 允许远程连接
+protected-mode no
+## 默认no，yes意为以守护进程方式启动，这里禁用
+daemonize no
+## 持久化
+appendonly yes
+## 客户端闲置多少秒后，断开连接，默认为300（秒）
+timeout 300
+## 可用数据库数，默认值为16，默认数据库为0
+databases 16
+## 当有一条Keys数据被改变是，900秒刷新到disk一次
+save 900 1
+## 当有10条Keys数据被改变时，300秒刷新到disk一次
+save 300 10
+## 当有1w条keys数据被改变时，60秒刷新到disk一次
+save 60 10000
+## 当dump .rdb数据库的时候是否压缩数据对象
+rdbcompression yes
+## 本地数据库文件名，默认值为dump.rdb
+dbfilename dump.rdb
+## 本地数据库存放路径，默认值为 ./
+dir /var/lib/redis/data
+## 密码 
+requirepass QWER1234ASDF
+## 最大客户端连接数，默认不限制
+#maxclients 128
+## 最大内存使用设置，达到最大内存设置后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理后，任到达最大内存设置，将无法再进行写入操作。
+#maxmemory <bytes>
+## 是否在每次更新操作后进行日志记录，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认值为no
+appendonly no
+## 更新日志文件名，默认值为appendonly.aof
+#appendfilename
+## 更新日志条件，共有3个可选值。
+## no 表示等操作系统进行数据缓存同步到磁盘;
+## always 表示每次更新操作后手动调用fsync()将数据写到磁盘;
+## everysec 表示每秒同步一次（默认值）;
+appendfsync everysec
+
+EOF
+```
+
+### 安装运行
+
+```sh
+## 拉取镜像
+docker pull redis
+## 运行
+docker run \
 --name redis \
--d redis:latest \
--- requirepass="QWER1234ASDF" \
+--restart=always \
+--privileged=true \
+-v /root/redis/data:/var/lib/redis/data \
+-v /root/redis/conf/redis.conf:/etc/redis/redis.conf \
+-p 6379:6379 \
+-d redis:latest redis-server /etc/redis/redis.conf
+## 查看运行
+docker ps -a
+```
 
-redis-cli -h 127.0.0.1 -p 6379
+### 测试数据
 
+```sh
+## 进入docker的redis数据库
+docker exec -it redis redis-cli -h 127.0.0.1 -p 6379
+## 认证
 auth QWER1234ASDF
+## 测试
+set name 'zhangsan'
+get name
+## 退出
+exit
 ```
 
 
