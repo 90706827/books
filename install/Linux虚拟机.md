@@ -187,6 +187,13 @@
    IPADDR="192.168.0.123"
    NETMASK="255.255.255.0"
    GATEWAY="192.168.0.253"
+   
+   BOOTPROTO="static"
+   IPADDR="192.168.3.23"
+   NETMASK="255.255.254.0"
+   GATEWAY="192.168.2.1"
+   DNS1="202.106.0.20":
+   DNS2="114.114.114.114"
    ```
 
 4. 重新启动网络
@@ -196,7 +203,7 @@
 
 ### 常用命令安装
 
-yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python lrzsz 
+yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python lrzsz cpio perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker 
 
 ### 脚本启动虚拟机
 
@@ -211,6 +218,7 @@ cd C:/Program Files/Oracle/VirtualBox
 VBoxManage startvm CentOS7 -type headless
 pause
 exit
+
 ```
 
 
