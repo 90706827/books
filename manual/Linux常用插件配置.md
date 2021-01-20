@@ -34,7 +34,7 @@ ssh-add -l #将它添加到已知的key列表中
 cat ~/.ssh/id_rsa.pub #把这个公钥添加到自己的Github账户上去
 
 ##实例
-git config --global user.name "Mr.Jangni"
+git config --global user.name "Mr.J"
 git config --global user.email "90706827@163.com"
 git config --global core.autocrlf false
 git config --global core.quotepath off
@@ -49,4 +49,23 @@ wget https://dl.yarnpkg.com/rpm/yarn.repo -O /etc/yum.repos.d/yarn.repo
 
 
 ```
+
+### Docker compose
+
+```sh
+## 下载 
+curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+## 下载慢可自行下载拷贝到/user/local/bin目录下改名 
+## 下载页面 https://github.com/docker/compose/releases
+cp docker-compose-Linux-x86_64 /usr/local/bin/docker-compose
+## 将可执行权限应用于二进制文件
+chmod +x /usr/local/bin/docker-compose
+## 建立软连接 
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+## 查看版本
+docker-compose -version
+
+```
+
+
 
