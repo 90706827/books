@@ -14,7 +14,7 @@
 ### 常用插件
 
 ```sh
-yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python lrzsz  cpio perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker yum-utils device-mapper-persistent-data lvm2 epel-release python-pip
+yum -y install vim wget cmake make unzip zip perl nodejs gcc* links* gcc-c++ build-essential zlib1g-devel libssl-devel libgdbm-devel libreadline-devel libncurses5-devel  openssh-server redis-server checkinstall lsb libxml2-devel libxslt-devel libcurl4-openssl-devel libicu-devel telnet logrotate python-docutils pkg-config autoconf libyaml-devel gdbm-devel ncurses-devel openssl* openssl-devel zlib* zlib-devel net-tools readline-devel curl curl-devel expat-devel gettext-devel  tk-devel libffi-devel sendmail patch libyaml* pcre* pcre-devel policycoreutils openssh-clients postfix policycoreutils-python lrzsz  cpio perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker yum-utils device-mapper-persistent-data lvm2 epel-release python-pip device-mapper-persistent-data
 ## docker 必须yum-utils device-mapper-persistent-data lvm2
 ## 更新
 yum -y update
@@ -81,6 +81,24 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
+
+### 安装docker-compose
+
+```sh
+## 下载 
+curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+## 下载慢可自行下载拷贝到/user/local/bin目录下改名 
+## 下载页面 https://github.com/docker/compose/releases
+cp docker-compose-Linux-x86_64 /usr/local/bin/docker-compose
+## 将可执行权限应用于二进制文件
+chmod +x /usr/local/bin/docker-compose
+## 建立软连接 
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+## 查看版本
+docker-compose -version
+```
+
+
 
 ## 搭建Portainer集群
 
@@ -828,7 +846,7 @@ exit;
 
 ```sh
 ## 拉取镜像
-docker pull mongo
+docker pull mongo:latest
 ## 运行 --auth(不设置密码可以去掉)
 docker run \
 --restart=always \
@@ -845,6 +863,7 @@ docker run \
 
 ```sh
 ## admin用户进入mongo
+docker exec -it mongo bash
 docker exec -it mongo mongo admin
 ## 创建管理员账户密码数据库
 db.createUser({ user: 'mongo', pwd: 'QWER1234ASDF', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
@@ -862,6 +881,11 @@ db.test.save({name:"zhangsan"});
 db.test.find();
 ## 退出
 exit;
+
+##实例
+db.createUser({ user: 'mongo', pwd: 'QWER1234ASDF', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
+db.auth("mongo","QWER1234ASDF");
+db.createUser({ user: 'zgcenv', pwd: '1234qwer', roles: [ { role: "readWrite", db: "hzx" } ] });
 ```
 
 ## 安装Redis
@@ -1486,6 +1510,73 @@ http{
 		}
 	}
 }
+```
+
+
+
+## 安装Node
+
+```sh
+
+docker pull node:latest
+
+docker run -itd --name node --restart=always -d node:latest
+
+docker exec -it node bash
+
+node -v
+
+v15.5.1
+
+```
+
+
+
+```sh
+tee /root/elip/web/Dockerfile <<-'EOF'
+# 设置基础镜像,如果本地没有该镜像，会从Docker.io服务器pull镜像
+FROM node:v15.5.1
+# 设置时区 暂不设置
+RUN apk --update add tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata
+# 创建app目录
+RUN mkdir -p /usr/src/elip/web
+# 设置工作目录
+WORKDIR /usr/src/elip/web
+
+# 拷贝package.json文件到工作目录
+# !!重要：package.json需要单独添加。
+# Docker在构建镜像的时候，是一层一层构建的，仅当这一层有变化时，重新构建对应的层。
+# 如果package.json和源代码一起添加到镜像，则每次修改源码都需要重新安装npm模块，这样木有必要。
+# 所以，正确的顺序是: 添加package.json；安装npm模块；添加源代码。
+COPY package.json /usr/src/elip/web/package.json
+# 安装npm依赖(使用淘宝的镜像源)
+# 如果使用的境外服务器，无需使用淘宝的镜像源，即改为`RUN npm i`。
+RUN npm i --registry=https://registry.npm.taobao.org
+# 拷贝所有源代码到工作目录
+COPY . /usr/src/elip/web
+# 暴露容器端口
+EXPOSE 7002
+# 启动node应用
+CMD EGG_SERVER_ENV=prod npm start
+EOF
+
+sudo docker build -t elip-web .
+## 创建网络
+docker network create my-network
+# 普通node.js应用
+sudo docker run -d --name elip-web -p 7002:7002 elip-web
+# eggjs应用
+sudo docker run -it --net my-network --name elip-web -v /root/logs/elip-web:/root/logs -p 7002:7002 -d elip-web:latest
+
+
+
+
+docker network create my-bridge
+docker run --name mysql --net my-bridge -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pwd -d mysql:5.7
+docker run -d -p 8080:8080 --net my-bridge randomapp
 ```
 
 
