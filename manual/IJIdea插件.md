@@ -15,7 +15,7 @@ File-->settings-->Editor-->File and Code Templates-->Files-->Class
 public class ${NAME} {
 }
 ```
-![实例](img\set_class.png)
+![实例](img/set_class.png)
 ### 方法注释模板添加
 File-->Settings-->Editor-->Live Templates
 ```java
@@ -27,7 +27,7 @@ File-->Settings-->Editor-->Live Templates
  * @Return $return$
  **/
 ```
-![实例](img\set_method.png)
+![实例](img/set_method.png)
 ### 设置不区分下小写提示
 ![实例](img/daxiaoxie.png)
 ## GsonFormat
