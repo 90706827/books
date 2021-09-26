@@ -222,7 +222,25 @@ exit
 ```
 
 ### 不同网络环境，固定IP设置，解决IP变动问题
+#### 工具-网络-创建：默认即可
+![](img/linux1.png)
+#### 设置-网络-网卡1
+![](img/linux2.png)
+#### 设置-网络-网卡2
+![](img/linux3.png)
+#### 固定IP设置
+启动后进入
+```shell
+cd /etc/sysconfig/network-scripts/;ls
 
+vi ifcfg-enp0s3
+# 修改
+BOOTPROTO="static"
+# 增加
+IPADDR="192.168.56.101"
+NETMASK="255.255.255.0"
+GATEWAY="192.168.56.255"
+DNS1="114.114.114.114"
+PREFIX="24"
 
-
-
+```
