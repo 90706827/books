@@ -62,5 +62,3 @@ Java编程神器
 https://plugins.jetbrains.com/plugin/7125-grep-console
 ## GitToolBox
 在Project中方便查询git版本及文件
-## Background Image Plusgit
-## Background Image Plus
